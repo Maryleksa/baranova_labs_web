@@ -1,6 +1,6 @@
 import random
 from functools import lru_cache
-from flask import Flask, render_template
+from flask import Flask, render_template, abort  # Добавлен abort
 from faker import Faker
 
 fake = Faker()
@@ -25,7 +25,7 @@ def generate_comments(replies=True):
 
 def generate_post(i):
     return {
-        'title': 'Заголовок поста',
+        'title': f'Заголовок поста {i+1}',
         'text': fake.paragraph(nb_sentences=100),
         'author': fake.name(),
         'date': fake.date_time_between(start_date='-2y', end_date='now'),
@@ -47,7 +47,11 @@ def posts():
 
 @app.route('/posts/<int:index>')
 def post(index):
-    p = posts_list()[index]
+    # Логика для обработки 404 ошибки
+    all_posts = posts_list()
+    if index < 0 or index >= len(all_posts):
+        abort(404)
+    p = all_posts[index]
     return render_template('post.html', title=p['title'], post=p)
 
 @app.route('/about')
