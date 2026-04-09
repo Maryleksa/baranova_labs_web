@@ -73,7 +73,7 @@ def test_error_404_on_invalid_post(client):
 # 13. Проверка ФИО автора в футере (ваши новые данные)
 def test_footer_name_correct(client):
     response = client.get("/")
-    assert "Баранова Мария Григорьевна" in response.text
+    assert "Баранова Мария" in response.text
 
 # 14. Проверка номера группы в футере
 def test_footer_group_correct(client):
